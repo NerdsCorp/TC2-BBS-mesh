@@ -13,14 +13,15 @@ RUN pip3 install --upgrade pip
 # Set working directory
 WORKDIR /app
 
-# Copy application code (adjust if needed based on your directory structure)
+# Copy only requirements first (better caching)
+COPY requirements.txt .  
+
+# Install Python dependencies (use --no-cache-dir)
+RUN pip install --no-cache-dir -r requirements.txt  
+
+# Now copy the rest of the application files  
 COPY . .
-
-# Install Python dependencies
-RUN pip install -r requirements.txt
-
-# Expose application port
-EXPOSE 5000
+ 
 
 # Start the application
 CMD [ "python", "server.py"]
