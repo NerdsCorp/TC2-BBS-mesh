@@ -33,7 +33,7 @@ jobs:
             IMAGE_TAG="latest"
           elif [[ "${GITHUB_REF}" == "refs/heads/main" ]]; then
             # If it's a push to main branch, use "DEV" as the image tag
-            IMAGE_TAG="DEV"
+            IMAGE_TAG="dev"
           fi
           docker build -t ghcr.io/nerdscorp/TC2-BBS-mesh:$IMAGE_TAG .
 
@@ -44,6 +44,6 @@ jobs:
             IMAGE_TAG="latest"
           elif [[ "${GITHUB_REF}" == "refs/heads/main" ]]; then
             # For main branch, push with "DEV" tag
-            IMAGE_TAG="DEV"
+            IMAGE_TAG="dev"
           fi
           docker push ghcr.io/nerdscorp/TC2-BBS-mesh:$IMAGE_TAG
