@@ -14,6 +14,7 @@ other BBS servers listed in the config.ini file.
 
 import logging
 import time
+import sys
 
 from config_init import initialize_config, get_interface, init_cli_parser, merge_config
 from db_operations import initialize_database
@@ -72,17 +73,23 @@ def main():
 
     pub.subscribe(receive_packet, system_config['mqtt_topic'])
 
-    # Initialize and start JS8Call Client if configured
     js8call_client = JS8CallClient(interface)
     js8call_client.logger = js8call_logger
 
     if js8call_client.db_conn:
         js8call_client.connect()
 
+    # Track start time
+    start_time = time.time()
     try:
         while True:
             time.sleep(1)
-
+            if time.time() - start_time >= 86400:  # 24 hours
+                logging.info("24 hours passed, shutting down for restart.")
+                interface.close()
+                if js8call_client.connected:
+                    js8call_client.close()
+                sys.exit(0)
     except KeyboardInterrupt:
         logging.info("Shutting down the server...")
         interface.close()
